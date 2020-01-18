@@ -1,0 +1,359 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+    <!-- <script src="https://cdn.staticfile.org/vue-router/2.7.0/vue-router.min.js"></script> -->
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <script src="./tool.js"></script>
+    <title>查看</title>
+    <style>
+        * {
+            font-family: PingFangSC-Regular, Helvetica, Arial, "Microsoft Yahei", sans-serif;
+            color: #310031;
+            font-size: 16px;
+        }
+
+        body {
+            margin: 0;
+            background-image: url('./bg/spikes.png');
+        }
+
+        #app {
+            max-width: 800px;
+            min-height: 100%;
+            margin: 0 auto;
+            background: url('./bg/4.gif');
+        }
+
+        .parent_flex_row {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .parent_flex_column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .py_content {
+            flex: 1;
+        }
+
+        .py_nav {
+            flex: 0 0 20px;
+        }
+
+        .py_nav div {
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+        }
+
+        .py_nav div a {
+            font-size: 12px;
+            line-height: 12px;
+            text-align: center;
+            margin: 2px;
+            text-decoration: none;
+        }
+
+        .html_nav {
+            flex: none;
+        }
+
+        .html_content {
+            flex: auto;
+        }
+
+        .i_c {
+            display: none;
+        }
+
+        .i_c_l,
+        .b {
+            padding: 0 10px;
+            margin: 10px 0px 10px 10px;
+            display: inline-block;
+            line-height: 100px;
+            font-size: 18px;
+            font-weight: 400;
+            white-space: nowrap;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 4px;
+            box-shadow: none;
+            border: 1px solid transparent;
+            /*用于清除button组件的立体感边框*/
+        }
+
+        .i_c_l {
+            border: 1px solid #839d9b;
+        }
+
+        .i_c_l_b {
+            border: 1px solid #e67d7d;
+        }
+
+        .i_c_l_b_checked {
+            border: 1px solid #e67d7d;
+            background-color: #e67d7d;
+            box-shadow: inset 0 1px 1px #e67d7d, 0 0 2px #e67d7d;
+            color: #f4f4f4;
+        }
+
+        .i_c_l_checked {
+            background-color: #839d9b;
+            box-shadow: inset 0 1px 1px #839d9b, 0 0 2px #839d9b;
+            color: #f4f4f4;
+        }
+
+        /* .b {
+            background-color: #fc9d9a;
+            border-color: #fc9d9a;
+            color: #fff;
+        }
+
+        .b:hover {
+            background: #fc9d9a !important;
+            border-color: #fc9d9a;
+            box-shadow: inset 0 0 1px #fc9d9a, 0 0 2px #fc9d9a;
+        } */
+
+        #name_search {
+            border: 1px solid #839d9b;
+            padding: 7px 0;
+            background: #f4f4f4;
+            border-radius: 3px;
+            padding-left: 5px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+            margin: 0 10px 10px;
+            width: 100%;
+        }
+
+        #name_search:focus {
+            outline: 0;
+            -webkit-box-shadow: inset 0 0 3px #839d9b, 0 0 3px #839d9b;
+            box-shadow: inset 0 0 3px #839d9b, 0 0 3px #839d9b
+        }
+
+        input {
+            vertical-align: middle;
+        }
+
+        .icon_D {
+            background-image: url(./bg/icon.png);
+            -webkit-background-size: 768px 544px;
+            background-size: 768px 544px;
+        }
+
+        section header {
+            position: sticky;
+            top: 0;
+            background: #c8c8a9;
+            padding-left: 20px;
+            height: 22px;
+            line-height: 22px;
+        }
+
+        section content .name_info {
+            border-top: 2px solid #c8c8a9;
+            padding: 5px 20px;
+            position: relative;
+        }
+
+        section content .name_info:first-child {
+            border: none;
+        }
+
+        /* 
+        .type {
+            width: auto;
+            display: inline-block;
+            overflow: hidden;
+            vertical-align: top
+        }
+ */
+        .type,
+        .detailBtn,
+        .editBtn {
+            padding: 0 5px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .type {
+            border: 1px solid #839d9b;
+        }
+
+        .detailBtn,
+        .editBtn {
+            border: 1px solid #dcbe78;
+
+        }
+
+        /* "ST": true,
+                        "W": true,
+                        "P": true,
+                        "D": true,
+                        "S": true,
+                        "H": true,
+                        "T": true,
+                        "I": */
+
+        /*color group*/
+        /* #fe4365 #fc9d9a #f9cdad #c8c8a9 #839d9b */
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="parent_flex_column">
+            <div class="html_nav parent_flex_row">
+                <template v-for="(value, key) in key2CN">
+                    <input type="checkbox" :id="'type_'+key" class="i_c" v-model="showMap[key]">
+                    <label :class="'i_c_l '+ (showMap[key] ? 'i_c_l_checked' : '')" :for="'type_'+key" v-text="value"
+                        :key="key" v-if="list.type[key]"></label>
+                </template>
+                <!-- <input v-if="isEditableBoss" type="checkbox" class="i_c" v-model="isEditable" id="name_editable">
+                <label v-if="isEditableBoss" :class="'i_c_l '+ (isEditable ? 'i_c_l_b_checked' : 'i_c_l_b')"
+                    v-text="isEditable?'关闭点击编辑':'开启点击编辑'" for="name_editable"></label>
+                <input v-if="isSelectableBoss" type="checkbox" class="i_c" v-model="isSelectable" id="name_selectable">
+                <label v-if="isSelectableBoss" :class="'i_c_l '+ (isSelectable ? 'i_c_l_b_checked' : 'i_c_l_b')"
+                    v-text="isSelectable?'关闭多选':'开启多选'" for="name_selectable"></label>
+                    <label v-if="isSelectable" class="i_c_l i_c_l_b_checked">查看全部</label> -->
+                <input type="text" id="name_search" v-model="nameSearch" />
+                <!-- <input type="button" id="search" class="b" @click="search" value="查询" /> -->
+            </div>
+            <div class="parent_flex_row html_content">
+                <main class="py_content">
+                    <article v-for="(value, key) in list.py" :keyName="key">
+                        <section :id="key">
+                            <header>
+                                <b>{{key}}</b>
+                            </header>
+                            <content>
+                                <div class="name_info" v-for="info in value" :title="info.id" v-if="showMap[info.type]">
+                                    <div class='showName' @click="showSelf(info.id)">
+                                        <span class="type" v-text="key2CN[info.type]"></span class="type">
+                                        <span class="name" v-text="info.name"></span>
+                                        <!-- <span class="detailBtn">查看详情</span>
+                                        <span class="editBtn" v-if='isEditable'>修改</span> -->
+                                    </div>
+                                </div>
+                            </content>
+                            <!-- <footer>
+                                <small>-</small>
+                            </footer> -->
+                        </section>
+                    </article>
+                </main>
+                <nav class="py_nav">
+                    <div>
+                        <a v-for="(value, key) in list.py" :href="'#'+key" :id="'py_nav_'+key"><b>{{key}}</b></a
+                            v-for="(value, key) in list.py">
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        let py_head = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z #".split(" ");
+        const KEY2CN = {
+            "ST": "攻略",
+            "W": "官网",
+            "P": "景点游乐园",
+            "D": "餐饮",
+            "S": "购物",
+            "H": "酒店",
+            "T": "交通枢纽",
+            "I": "信息中心"
+        };
+        let vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    key2CN: KEY2CN,
+                    showMap: {
+                        "ST": true,
+                        "W": true,
+                        "P": true,
+                        "D": true,
+                        "S": true,
+                        "H": true,
+                        "T": true,
+                        "I": true
+                    },
+                    nameSearch: "",
+                    isEditableBoss: true,
+                    isEditable: true,
+                    isSelectableBoss: true,
+                    isSelectable: true,
+                    list: {
+                        py: {},
+                        type: {}
+                    }
+                }
+            },
+            methods: {
+                updateList: function (data) {
+                    this.list = data;
+                },
+                showSelf: function(id){
+                    window.open(`./insertInfo.html?id=${id}`);
+                },
+                search: function () {
+
+                }
+            },
+            updated() {
+                let py_div = document.querySelectorAll(".py_content article");
+                let py_nav = document.querySelectorAll(".py_nav")[0];
+                py_div.forEach(e => {
+                    let hrefWord = py_nav.querySelector("#py_nav_" + e.getAttribute("keyname"));
+                    if (e.querySelectorAll(".name_info").length === 0) {
+                        e.style.display = "none";
+                        hrefWord.style.display = "none";
+                    } else {
+                        e.style.display = "block";
+                        hrefWord.style.display = "block";
+                    }
+                });
+            }
+        });
+
+        vm.$http.get(`./list`).then((data) => {
+            let newData = {
+                py: {},
+                type: {}
+            };
+            for (var key of py_head) {
+                let infos = data.body.py[key];
+                if (infos) {
+                    newData.py[key] = infos;
+                }
+            }
+            for (var key in data.body.types) {
+                newData.type[key] = true;
+            }
+            vm.updateList(newData);
+        }).catch((error) => {
+            alert(JSON.stringify(error));
+        });
+
+        // 例如向 vm.list.type 中 添加 {"I": true} 是不会出发 v-if的判断的 原因 http://www.fang99.cc/#/detail/3524
+        // 要是用 vm.$set(vm.list.type, "I", true); 来触发
+
+    </script>
+</body>
+
+</html>

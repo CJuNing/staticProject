@@ -1,0 +1,501 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+    <!-- <script src="https://cdn.staticfile.org/vue-router/2.7.0/vue-router.min.js"></script> -->
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <script src="./tool.js"></script>
+    <title>添加信息</title>
+    <style>
+        * {
+            font-family: PingFangSC-Regular, Helvetica, Arial, "Microsoft Yahei", sans-serif;
+        }
+
+        div#part_3_1 input[type=text],
+        div#part_3_1 input[type=url],
+        div#part_3_2 input[type=text],
+        input[type=url] {
+            width: 500px;
+        }
+
+        div#part_3_1 .key {
+            width: 50px;
+        }
+
+        div#part_3_1 textarea,
+        #part_3_2 textarea {
+            width: 500px;
+            height: auto;
+        }
+
+        div#part_3_1 tr td:first-child,
+        div#part_3_2 tr td:first-child {
+            text-align: right;
+            vertical-align: top;
+        }
+
+        tr:nth-of-type(odd) {
+            background-color: rgb(230, 248, 209);
+        }
+
+        tr:nth-of-type(even) {
+            background-color: aliceblue;
+        }
+
+        div.dynamic {
+            margin-bottom: 2px;
+        }
+
+        div.dynamic input[type=button] {
+            display: inline-block;
+            width: 24px;
+        }
+
+        .parent {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .card {
+            flex: 1;
+        }
+
+        .part_1_left {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .part_1_right {
+            border: 1px solid black;
+            flex: 3 auto;
+        }
+
+        .border {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div id="part_0">
+            <span>ID: {{ part_0_id }}</span>
+        </div>
+        <div id="part_1_type" class="parent">
+            <span>类型：</span>
+            <br>
+            <div class="part_1_left">
+                <input type="radio" v-model="part_1_type" value="STRATEGY" id="part_1_type_strategy">
+                <label for="part_1_type_strategy">攻略</label>
+                <br>
+                <input type="radio" v-model="part_1_type" value="WEBSITE" id="part_1_type_website">
+                <label for="part_1_type_website">官网</label>
+                <br>
+                <input type="radio" v-model="part_1_type" value="PLAY" id="part_1_type_play">
+                <label for="part_1_type_play">景点</label>
+                <br>
+                <input type="radio" v-model="part_1_type" value="DIET" id="part_1_type_food">
+                <label for="part_1_type_food">饮食</label>
+                <br>
+                <input type="radio" v-model="part_1_type" value="SHOP" id="part_1_type_shop">
+                <label for="part_1_type_shop">购物</label>
+                <br>
+                <input type="radio" v-model="part_1_type" value="HOTEL" id="part_1_type_hotel">
+                <label for="part_1_type_hotel">酒店</label>
+                <br>
+            </div>
+            <div class="part_1_right">
+
+            </div>
+        </div>
+        <hr>
+        <div id="part_2">
+            <span>所在区域：</span>
+            <br>
+            <table>
+                <tr>
+                    <td>国家</td>
+                    <td>地区</td>
+                    <td>城市</td>
+                    <td>二级</td>
+                </tr>
+                <tr>
+                    <td><input type="text" v-model="part_2_country"></td>
+                    <td><input type="text" v-model="part_2_area"></td>
+                    <td><input type="text" v-model="part_2_city"></td>
+                    <td><input type="text" v-model="part_2_local"></td>
+                </tr>
+            </table>
+            <hr>
+        </div>
+        <div id="part_3_1" v-if="part_1_type == 'STRATEGY' || part_1_type == 'WEBSITE'">
+            <span>信息：</span>
+            <br>
+            <!-- 等同于用watch方法对part_3_1_title的处理 -->
+            <table>
+                <tr>
+                    <td width="150px"><label for="part_3_2_name">名称</label></td>
+                    <td><input type="text" v-model="part_3_2_name" id="part_3_2_name"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="">{{ part_3_url_TITLE_CN = part_1_type == 'STRATEGY' ? '网址' : '官网' }}</label>
+                    </td>
+                    <td>
+                        <div class="dynamic" v-for="(item, index) of part_3_url">
+                            <input type="url" v-model="part_3_url[index]" :key="index">
+                            <input type="button" value="+" @click="url_add(part_3_url, index)">
+                            <input type="button" value="-" @click="url_remove(part_3_url, index)">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="">{{ part_3_cn_url_TITLE_CN = '中文' + part_3_url_TITLE_CN }}</label>
+                    </td>
+                    <td>
+                        <div class="dynamic" v-for="(item, index) of part_3_cn_url">
+                            <input type="url" v-model="part_3_cn_url[index]" :key="index">
+                            <input type="button" value="+" @click="url_add(part_3_cn_url, index)">
+                            <input type="button" value="-" @click="url_remove(part_3_cn_url, index)">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="">相关网站</label></td>
+                    <td>
+                        <div class="dynamic" v-for="(item, index) of part_3_other_url">
+                            <input type="url" v-model="part_3_other_url[index]" :key="index">
+                            <input type="button" value="+" @click="url_add(part_3_other_url, index)">
+                            <input type="button" value="-" @click="url_remove(part_3_other_url, index)">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="part_3_remarks">备注</label>
+                    </td>
+                    <td>
+                        <textarea v-model="part_3_remarks" id="part_3_remarks" cols="70" rows="5"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="part_3_markdown">Markdown</label>
+                    </td>
+                    <td>
+                        <textarea v-model="part_3_markdown" id="part_3_markdown" cols="70" rows="5"></textarea>
+                    </td>
+                </tr>
+            </table>
+            <hr>
+        </div>
+        <div id="part_3_2" v-else>
+            <span>信息：</span>
+            <div class="parent">
+                <div class="card">
+                    <table>
+                        <tr>
+                            <td width="150px"><label for="part_3_2_name">中文名称</label></td>
+                            <td><input type="text" v-model="part_3_2_name" id="part_3_2_name"></td>
+                        </tr>
+                        <tr>
+                            <td width="150px"><label for="part_3_2_name_jp">日文名称</label></td>
+                            <td><input type="text" v-model="part_3_2_name_jp" id="part_3_2_name_jp"></td>
+                        </tr>
+                        <tr>
+                            <td width="150px"><label for="part_3_2_name_en">英文名称</label></td>
+                            <td><input type="text" v-model="part_3_2_name_en" id="part_3_2_name_en"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">官网</label></td>
+                            <td>
+                                <div class="dynamic" v-for="(item, index) of part_3_url">
+                                    <input type="url" v-model="part_3_url[index]" :key="index">
+                                    <input type="button" value="+" @click="url_add(part_3_url, index)">
+                                    <input type="button" value="-" @click="url_remove(part_3_url, index)">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="">中文官网</label></td>
+                            <td>
+                                <div class="dynamic" v-for="(item, index) of part_3_cn_url">
+                                    <input type="url" v-model="part_3_cn_url[index]" :key="index">
+                                    <input type="button" value="+" @click="url_add(part_3_cn_url, index)">
+                                    <input type="button" value="-" @click="url_remove(part_3_cn_url, index)">
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- <tr v-if="part_1_type == 'HOTEL'">
+                            <td><label for="part_3_2_booking_url">Booking</label></td>
+                            <td><input type="url" v-model="part_3_2_booking_url" id="part_3_2_booking_url"></td>
+                        </tr>
+                        <tr v-if="part_1_type == 'HOTEL'">
+                            <td><label for="part_3_2_ctrip_url">携程</label></td>
+                            <td><input type="url" v-model="part_3_2_booking_url" id="part_3_2_booking_url"></td>
+                        </tr>
+                        <tr v-if="part_1_type == 'HOTEL'">
+                            <td><label for="part_3_2_tuniu_url">途牛</label></td>
+                            <td><input type="url" v-model="part_3_2_tuniu_url" id="part_3_2_tuniu_url"></td>
+                        </tr> -->
+                        <tr v-if="part_1_type == 'SHOP'">
+                            <td><label for="part_3_2_floor_url">楼层指南</label></td>
+                            <td><input type="url" v-model="part_3_2_floor_url" id="part_3_2_floor_url"></td>
+                        </tr>
+                        <tr v-if="part_1_type == 'SHOP'">
+                            <td><label for="part_3_2_shop_url">店铺指南</label></td>
+                            <td><input type="url" v-model="part_3_2_shop_url" id="part_3_2_shop_url"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_2_traffic_url">交通、位置指南</label></td>
+                            <td><input type="url" v-model="part_3_2_traffic_url" id="part_3_2_traffic_url"></td>
+                        </tr>
+                        <tr v-if="part_1_type !== 'HOTEL'">
+                            <td>
+                                <label for="part_3_2_time">{{ part_3_2_time_TITLE_CN }}</label></td>
+                            <td>
+                                <textarea v-model="part_3_2_time" id="part_3_2_time" cols="70" rows="5"></textarea>
+                            </td>
+                        </tr>
+                        <tr v-if="part_1_type == 'PLAY'">
+                            <td><label for="part_3_2_cost">门票价格</label></td>
+                            <td>
+                                <textarea v-model="part_3_2_cost" id="part_3_2_cost" cols="70" rows="5"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="">相关网站</label></td>
+                            <td>
+                                <div class="dynamic" v-for="(item, index) of part_3_other_url">
+                                    <input type="url" v-model="part_3_other_url[index]" :key="index">
+                                    <input type="button" value="+" @click="url_add(part_3_other_url, index)">
+                                    <input type="button" value="-" @click="url_remove(part_3_other_url, index)">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_remarks">备注</label></td>
+                            <td>
+                                <textarea v-model="part_3_remarks" id="part_3_remarks" cols="70" rows="5"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_markdown">Markdown</label></td>
+                            <td>
+                                <textarea v-model="part_3_markdown" id="part_3_markdown" cols="70" rows="5"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_2_address_en">英文地址</label></td>
+                            <td><input type="text" v-model="part_3_2_address_en" id="part_3_2_address_en"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_2_address_cn">中文地址</label></td>
+                            <td><input type="text" v-model="part_3_2_address_cn" id="part_3_2_address_cn"></td>
+                        </tr>
+                        <!-- <tr>
+                            <td><label for="part_3_2_local"></label></td>
+                            <td>
+                                <textarea v-model="part_3_2_local" id="part_3_2_local" cols="70" rows="5"></textarea>
+                            </td>
+                        </tr> -->
+                        <tr>
+                            <td><label for="part_3_2_pluscode">Plus code</label></td>
+                            <td><input type="text" v-model="part_3_2_pluscode" id="part_3_2_pluscode"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_2_gps">经纬度</label></td>
+                            <td>
+                                <input type="url" v-model="part_3_2_gps" id="part_3_2_gps">
+                                <!-- <a v-bind:href="'https://www.google.com/maps/place/'+part_3_2_gps" target="_blank"> -->
+                                <a v-bind:href="'https://www.google.com/maps/@'+part_3_2_gps+',18z'" target="_blank">
+                                    <input type="button" value="View in Google Maps">
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_2_google_url">谷歌地图分享url</label></td>
+                            <td>
+                                <input type="url" v-model="part_3_2_google_url" id="part_3_2_google_url">
+                                <a v-bind:href="part_3_2_google_url" target="_blank">
+                                    <input type="button" value="View in Google Maps">
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_2_google_html">谷歌地图分享代码块</label></td>
+                            <td><input type="text" v-model="part_3_2_google_html" id="part_3_2_google_html"></td>
+                        </tr>
+                        <!-- <tr>
+                            <td><label for="part_3_other_url">相关攻略</label></td>
+                            <td>
+                                <textarea v-model="part_3_other_url" id="part_3_other_url" cols="70" rows="5"></textarea>
+                            </td>
+                        </tr> -->
+                    </table>
+                </div>
+                <div class="card" v-if="part_3_2_google_html !== ''" v-html="part_3_2_google_html"></div>
+            </div>
+
+            <hr>
+        </div>
+        <div id="part_4">
+            <input type="button" value="清空" @click="reset">
+            <input type="date" v-model="part_4_last_save_time" readonly>
+            <input type="button" value="保存" @click="checkAndSave">
+        </div>
+    </div>
+    <script>
+
+        const EN2CN = {
+            'japan': '日本',
+            'Kansai': '关西',
+            'Kanto': '关东',
+            'Hokkaido': '北海道',
+        }
+        const AREAMAP = {
+            'japan': {
+                'Kansai': ['大阪', '奈良', '京都', '宇治', '神户'],
+                'Kanto': ['东京', '横滨', '富士急', '川崎', '镰仓', '横须贺', '箱根', '静冈'],
+                'Hokkaido': ['札幌', '小樽', '函馆', '南千岁', '登别', '洞爷', '富良野']
+            }
+        }
+
+        let getFormartDate = () => {
+            return new Date().toLocaleDateString().split("/").reduce((pre, now) => {
+                while (now.length < 2) {
+                    now = "0" + now;
+                }
+                return pre + "-" + now;
+            });
+        };
+
+        let vm = new Vue({
+            el: "#app",
+            data: function () {
+                return {
+                    part_0_id: "",
+                    part_1_type: "STRATEGY",
+                    part_2_country: "日本",
+                    part_2_area: "",
+                    part_2_city: "",
+                    part_2_local: "",
+                    part_3_url_TITLE_CN: "",
+                    part_3_cn_url_TITLE_CN: "",
+                    part_3_other_url_TITLE_CN: "",
+                    part_3_2_time_TITLE_CN: "",
+                    part_3_url: [""],
+                    part_3_cn_url: [""],
+                    part_3_other_url: [""],
+                    part_3_remarks: "",
+                    part_3_markdown: "",
+                    part_3_2_name: "",
+                    part_3_2_name_jp: "",
+                    part_3_2_name_en: "",
+                    part_3_2_time: "",
+                    part_3_2_cost: "",
+                    part_3_2_floor_url: "",
+                    part_3_2_shop_url: "",
+                    part_3_2_traffic_url: "",
+                    part_3_2_gps: "",
+                    part_3_2_pluscode: "",
+                    part_3_2_address_en: "",
+                    part_3_2_address_cn: "",
+                    part_3_2_local: "",
+                    part_3_2_pluscode: "",
+                    part_3_2_google_url: "",
+                    part_3_2_google_html: "",
+                    part_3_2_booking_url: "",
+                    part_3_2_ctrip_url: "",
+                    part_3_2_tuniu_url: "",
+                    part_4_last_save_time: getFormartDate()
+                }
+            },
+            // // bind computed methods
+            computed: {
+            },
+            methods: {
+                url_add: function (arr, i) {
+                    arr.splice(i + 1, 0, "");
+                },
+                url_remove: function (arr, i) {
+                    arr.splice(i, 1);
+                },
+                checkName: debounce(function () {
+                    if (!this.part_3_2_name) return;
+                    this.$http.get(`./checkname?id=${this.part_3_2_name}`).then((data) => {
+                        console.log(JSON.stringify(data));
+                    }).catch((error) => {
+                        alert(JSON.stringify(error));
+                    });
+                }, 2000),
+                checkAndSave: function () {
+                    console.log(JSON.stringify(vm._data));
+                    this.$http.post("./save", {
+                        data: JSON.stringify(vm.$data)
+                    }, {
+                        emulateJSON: true
+                    }).then(function (data) {
+                        // console.log(JSON.stringify(data));
+                        alert(data.body.data);
+                        this.reset();
+                    }).catch(function (e) {
+                        alert(JSON.stringify(e.body.data));
+                    })
+                },
+                reset: function () {
+                    Object.assign(this.$data, this.$options.data());
+                },
+                resetWithout: function (obj) {
+                    Object.assign(this.$data, this.$options.data(), obj);
+                }
+            },
+            watch: {
+                part_1_type: function (newValue, oldValue) {
+                    // this.resetWithout({ part_1_type: newValue });
+                    // console.log("watch");
+                    switch (newValue) {
+                        case 'PLAY':
+                            this.part_3_2_time_TITLE_CN = "开放时间";
+                            break;
+                        default:
+                            this.part_3_2_time_TITLE_CN = "营业时间";
+                    }
+                },
+                part_2_city: function (newValue, oldValue) {
+                    for (let countryName in AREAMAP) {
+                        let country = AREAMAP[countryName]
+                        for (let areaName in country) {
+                            let area = country[areaName];
+                            if (area.includes(newValue)) {
+                                this.part_2_country = EN2CN[countryName];
+                                this.part_2_area = EN2CN[areaName];
+                                return;
+                            }
+                        }
+                    }
+                },
+                part_3_2_name: function (value) {
+                    this.part_3_2_name = value.replace(/\\|\/|\"|\*|\?|\:|\<|\>|\||\./g, '');
+                    this.checkName();
+                }
+            }
+        });
+
+        let ID;
+        if (ID = location.getValue('id')) {
+            vm.$http.get(`./get?id=${ID}`).then((data) => {
+                data.part_4_last_save_time = vm.part_4_last_save_time;
+                console.log("beforereset");
+                vm.resetWithout(data.body);
+                console.log("afterreset");
+            }).catch((error) => {
+                alert(JSON.stringify(error));
+            });
+        }
+    </script>
+</body>
+
+</html>

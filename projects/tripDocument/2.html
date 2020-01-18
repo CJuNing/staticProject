@@ -1,0 +1,117 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>2019年12月7日 - 2019年12月15日 - 北海道(札幌-函馆-小樽)9日8晚自由行</title>
+    <script src="./tool.js"></script>
+    <script src="./jquery.js"></script>
+    <link rel="stylesheet" type="text/css" href="./base.css">
+    <style>
+        body {
+            background: papayawhip;
+            font-family: "Microsoft Yahei";
+            font-size: 14px;
+        }
+
+        table {
+            table-layout: fixed;
+        }
+
+        .td {
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .title {
+            font-size: 20px;
+            padding: 5px;
+        }
+
+        .thead .td {
+            font-size: 16px;
+            border: 1px solid #000;
+            padding: 5px;
+        }
+
+        .tbody .td {
+            font-size: 14px;
+            border: 1px solid #000;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .red {
+            color: red;
+        }
+    </style>
+    <script>
+        window.onload = () => {
+            // 交通行程
+            let p1 = {
+                title: "景点行程",
+                col: [{
+                    n: '日期',
+                    w: 'auto'
+                }, {
+                    n: '行程',
+                    w: '400px'
+                }, {
+                    n: '备注',
+                    w: 'auto'
+                }],
+                data: [
+                    ['12/07<br/>周六', '去函馆的车,整点一班,争取1400上车,3.5小时到达函馆,1800左右checkin,<span class="red">后续干什么待定<span>', '使用JRPASS'],
+                    ['12/08<br/>周日', '早上朝市,完后五棱郭,下午1500前到达函馆山观光台(1600落日,为了找个好位置最好提前1.5小时上山)', ''],
+                    ['12/09<br/>周一', '8号如果时间赶,可以吧朝市或者五棱郭行程改到9号；争取1200离开函馆奔向星野)', '使用JRPASS'],
+                    ['12/10<br/>周二', '星野度假村', ''],
+                    ['12/11<br/>周三', '星野度假村', ''],
+                    ['12/12<br/>周四', '中午回到札幌,优先去小樽', '使用JRPASS,最好去小樽'],
+                    ['12/13<br/>周五', '12号去过小樽的话就在札幌', '使用JRPASS(与15日互斥)'],
+                    ['12/14<br/>周六', '去北海道神宫,札幌啤酒博物馆,白色恋人工厂,北海道大学,大通公园(札幌冰雪节),中岛公园,藻岩山,JR塔T38,买买买', ''],
+                    ['12/15<br/>周日', '札幌-[CA170]-北京', '使用JRPASS(与13日互斥)']
+                ]
+            };
+
+            let p2 = {
+                title: "交通行程",
+                col: [{
+                    n: '日期',
+                    w: 'auto'
+                }, {
+                    n: '交通',
+                    w: 'auto'
+                }, {
+                    n: '住宿',
+                    w: 'auto'
+                }, {
+                    n: '备注',
+                    w: 'auto'
+                }],
+                data: [
+                    ['12/07<br/>周六', '北京-[CA169]-新千岁机场-[JR]-函馆', '函馆', '使用JRPASS'],
+                    ['12/08<br/>周日', '函馆', '函馆', ''],
+                    ['12/09<br/>周一', '函馆-[JR]-星野度假村', '星野度假村', '使用JRPASS'],
+                    ['12/10<br/>周二', '星野度假村', '星野度假村', ''],
+                    ['12/11<br/>周三', '星野度假村', '星野度假村', ''],
+                    ['12/12<br/>周四', '星野度假村-[JR]-札幌-?-[JR]-小樽', '札幌', '使用JRPASS,最好去小樽'],
+                    ['12/13<br/>周五', '小樽 | 札幌', '札幌', '使用JRPASS(与15日互斥)'],
+                    ['12/14<br/>周六', '札幌', '札幌', ''],
+                    ['12/15<br/>周日', '札幌-[CA170]-北京', '', '使用JRPASS(与13日互斥)']
+                ]
+            };
+
+            $("body").append(new table(p1));
+            $("body").append("<br/>");
+            $("body").append(new table(p2));
+
+        }
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

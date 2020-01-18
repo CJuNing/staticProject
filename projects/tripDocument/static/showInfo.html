@@ -1,0 +1,131 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+    <!-- <script src="https://cdn.staticfile.org/vue-router/2.7.0/vue-router.min.js"></script> -->
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <script src="./tool.js"></script>
+    <title>查看</title>
+    <style>
+        * {
+            font-family: PingFangSC-Regular, Helvetica, Arial, "Microsoft Yahei", sans-serif;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .name {
+            font-size: 20px;
+        }
+
+        .title,
+        .value {
+            font-size: 14px;
+        }
+
+        .PLAY span {
+            background-color: rgb(219, 210, 228);
+        }
+
+        .DIET span {
+            background-color: rgb(255, 227, 203);
+        }
+
+        .STRATEGY span {
+            background-color: rgb(235, 241, 221);
+        }
+
+        .WEBSIET span {
+            background-color: rgb(244, 245, 171);
+        }
+
+        .SHOP span {
+            background-color: rgb(255, 212, 211);
+        }
+
+        .HOTEL span {
+            background-color: rgb(182, 222, 233);
+        }
+
+        .d {
+            width: 200px;
+            height: 200px;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div class="DIET d"></div>
+    <div class="PLAY d"></div>
+    <div class="WEBSIET d"></div>
+    <div class="STRATEGY d"></div>
+    <div class="SHOP d"></div>
+    <div class="HOTEL d"></div> -->
+
+    <div id="app">
+        <input type="checkbox" v-model="isShowId" id="isShowId">
+        <label for="isShowId">是否展示ID</label>
+        <div id="part_0">
+            <div :class="info.type">
+                <hr>
+                <span class="bold name">{{info.name}}</span>
+                <hr>
+                <span v-if='isShowId' class="bold title">{{ info.desc }}: {{info.id}}</span>
+                <br v-if='isShowId'>
+                <template v-for="item in info.detail">
+                    <span class="bold title">{{item.title}}:</span>
+                    <template v-if="item.isHtml">
+                        <div v-html="item.value"></div>
+                    </template>
+                    <template v-else>
+                        <span class="value">{{item.value}}</span>
+                    </template>
+                    <br>
+                </template>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        // for(var title in title2CNMap){
+        //     console.log(title + "===" + title2CNMap[title]);
+        // }
+
+        let vm = new Vue({
+            el: "#app",
+            data: function () {
+                return {
+                    isShowId: false,
+                    info: {
+                        id: "",
+                        type: "",
+                        des: "",
+                        name: "",
+                        detail: []
+                    }
+                }
+            },
+            // // bind computed methods
+            computed: {
+            },
+            methods: {
+            },
+            watch: {
+            }
+        });
+
+        let ID;
+        if ((ID = location.getValue('id')) != "") {
+            vm.$http.get(`./show?id=${ID}`).then((data) => {
+                vm.info = data.body;
+            }).catch((error) => {
+                alert(JSON.stringify(error));
+            });
+        }
+    </script>
+</body>
+
+</html>

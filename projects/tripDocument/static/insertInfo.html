@@ -1,0 +1,354 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+    <!-- <script src="https://cdn.staticfile.org/vue-router/2.7.0/vue-router.min.js"></script> -->
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <script src="./tool.js"></script>
+    <title>添加信息</title>
+    <link rel="stylesheet" href="insert.css">
+</head>
+
+<body>
+    <div id="app">
+        <div id="part_0">
+            <span class='orgId'>原ID: {{ part_0_id }}</span>
+            <span class='orgId'>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+            <span id="currentId"></span>
+            <hr>
+        </div>
+        <div id="part_1_type" class="">
+            <div class="part_1_left">
+                <input type="radio" class="i_r" v-model="part_1_type" value="STRATEGY" id="part_1_type_strategy">
+                <label for="part_1_type_strategy" :class="part_1_type==='STRATEGY'?'i_r_checked':''">攻略</label>
+                <br>
+                <input type="radio" class="i_r" v-model="part_1_type" value="WEBSITE" id="part_1_type_website">
+                <label for="part_1_type_website" :class="part_1_type==='WEBSITE'?'i_r_checked':''">官网</label>
+                <br>
+                <input type="radio" class="i_r" v-model="part_1_type" value="PLAY" id="part_1_type_play">
+                <label for="part_1_type_play" :class="part_1_type==='PLAY'?'i_r_checked':''">景点游乐园</label>
+                <br>
+                <input type="radio" class="i_r" v-model="part_1_type" value="DIET" id="part_1_type_food">
+                <label for="part_1_type_food" :class="part_1_type==='DIET'?'i_r_checked':''">餐饮</label>
+                <br>
+                <input type="radio" class="i_r" v-model="part_1_type" value="SHOP" id="part_1_type_shop">
+                <label for="part_1_type_shop" :class="part_1_type==='SHOP'?'i_r_checked':''">购物</label>
+                <br>
+                <input type="radio" class="i_r" v-model="part_1_type" value="HOTEL" id="part_1_type_hotel">
+                <label for="part_1_type_hotel" :class="part_1_type==='HOTEL'?'i_r_checked':''">酒店</label>
+                <br>
+                <input type="radio" class="i_r" v-model="part_1_type" value="TRAFFIC" id="part_1_type_traffic">
+                <label for="part_1_type_traffic" :class="part_1_type==='TRAFFIC'?'i_r_checked':''">交通枢纽</label>
+                <br>
+                <input type="radio" class="i_r" v-model="part_1_type" value="INFORMATION" id="part_1_type_information">
+                <label for="part_1_type_information" :class="part_1_type==='INFORMATION'?'i_r_checked':''">信息中心</label>
+                <br>
+            </div>
+            <div class="part_1_right">
+
+            </div>
+        </div>
+        <hr>
+        <div id="part_2">
+            <span>所在区域：</span>
+            <br>
+            <table>
+                <tr>
+                    <td>国家</td>
+                    <td>地区</td>
+                    <td>城市</td>
+                    <td>二级</td>
+                </tr>
+                <tr>
+                    <td><input type="text" class="i_t" v-model="part_2_country"></td>
+                    <td><input type="text" class="i_t" v-model="part_2_area"></td>
+                    <td><input type="text" class="i_t" v-model="part_2_city"></td>
+                    <td><input type="text" class="i_t" v-model="part_2_local"></td>
+                </tr>
+            </table>
+            <hr>
+        </div>
+        <div id="part_3_1" v-if="part_1_type == 'STRATEGY' || part_1_type == 'WEBSITE'">
+            <span>信息：</span>
+            <br>
+            <!-- 等同于用watch方法对part_3_1_title的处理 -->
+            <table>
+                <tr>
+                    <td width="150px"><label for="part_3_2_name">名称</label></td>
+                    <td><input type="text" class="i_t" v-model="part_3_2_name" id="part_3_2_name"></td>
+                </tr>
+                <tr>
+                    <td><label for="part_3_2_name_jp">日文名称</label></td>
+                    <td><input type="text" class="i_t" v-model="part_3_2_name_jp" id="part_3_2_name_jp"></td>
+                </tr>
+                <tr>
+                    <td><label for="part_3_2_name_en">英文名称</label></td>
+                    <td><input type="text" class="i_t" v-model="part_3_2_name_en" id="part_3_2_name_en"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="">{{ part_3_url_TITLE_CN = part_1_type == 'STRATEGY' ? '网址' : '官网' }}</label>
+                    </td>
+                    <td>
+                        <div class="dynamic" v-for="(item, index) of part_3_url">
+                            <input type="url" class="i_u" v-model="part_3_url[index]" :key="index">
+                            <input type="button" class="i_b arr_ctl" value="+" @click="url_add(part_3_url, index)">
+                            <input type="button" value="-"
+                                :class="'i_b arr_ctl ' + (part_3_url.length === 1 ? 'arr_ctl_disable' : '')"
+                                @click="url_remove(part_3_url, index)">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="">{{ part_3_cn_url_TITLE_CN = '中文' + part_3_url_TITLE_CN }}</label>
+                    </td>
+                    <td>
+                        <div class="dynamic" v-for="(item, index) of part_3_cn_url">
+                            <input type="url" class="i_u" v-model="part_3_cn_url[index]" :key="index">
+                            <input type="button" class="i_b arr_ctl" value="+" @click="url_add(part_3_cn_url, index)">
+                            <input type="button" value="-"
+                                :class="'i_b arr_ctl ' + (part_3_cn_url.length === 1 ? 'arr_ctl_disable' : '')"
+                                @click="url_remove(part_3_cn_url, index)">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="">相关网站</label></td>
+                    <td>
+                        <div class="dynamic" v-for="(item, index) of part_3_other_url">
+                            <input type="url" class="i_u" v-model="part_3_other_url[index]" :key="index">
+                            <input type="button" class="i_b arr_ctl" value="+"
+                                @click="url_add(part_3_other_url, index)">
+                            <input type="button" value="-"
+                                :class="'i_b arr_ctl ' + (part_3_other_url.length === 1 ? 'arr_ctl_disable' : '')"
+                                @click="url_remove(part_3_other_url, index)">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="part_3_remarks">备注</label>
+                    </td>
+                    <td>
+                        <textarea class="ta" v-model="part_3_remarks" id="part_3_remarks" cols="70" rows="5"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="part_3_markdown">Markdown</label>
+                    </td>
+                    <td>
+                        <textarea class="ta" v-model="part_3_markdown" id="part_3_markdown" cols="70"
+                            rows="5"></textarea>
+                    </td>
+                </tr>
+            </table>
+            <hr>
+        </div>
+        <div id="part_3_2" v-else>
+            <span>信息：</span>
+            <div class="parent_column">
+                <div class="part_3_2_left">
+                    <table>
+                        <tr>
+                            <td width="150px"><label for="part_3_2_name">中文名称</label></td>
+                            <td><input type="text" class="i_t" v-model="part_3_2_name" id="part_3_2_name"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_2_name_jp">日文名称</label></td>
+                            <td><input type="text" class="i_t" v-model="part_3_2_name_jp" id="part_3_2_name_jp"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_2_name_en">英文名称</label></td>
+                            <td><input type="text" class="i_t" v-model="part_3_2_name_en" id="part_3_2_name_en"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">官网</label></td>
+                            <td>
+                                <div class="dynamic" v-for="(item, index) of part_3_url">
+                                    <input type="url" class="i_u" v-model="part_3_url[index]" :key="index">
+                                    <input type="button" class="i_b arr_ctl" value="+"
+                                        @click="url_add(part_3_url, index)">
+                                    <input type="button" value="-"
+                                        :class="'i_b arr_ctl ' + (part_3_url.length === 1 ? 'arr_ctl_disable' : '')"
+                                        @click="url_remove(part_3_url, index)">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="">中文官网</label></td>
+                            <td>
+                                <div class="dynamic" v-for="(item, index) of part_3_cn_url">
+                                    <input type="url" class="i_u" v-model="part_3_cn_url[index]" :key="index">
+                                    <input type="button" class="i_b arr_ctl" value="+"
+                                        @click="url_add(part_3_cn_url, index)">
+                                    <input type="button" value="-"
+                                        :class="'i_b arr_ctl ' + (part_3_cn_url.length === 1 ? 'arr_ctl_disable' : '')"
+                                        @click="url_remove(part_3_cn_url, index)">
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- <tr v-if="part_1_type == 'HOTEL'">
+                            <td><label for="part_3_2_booking_url">Booking</label></td>
+                            <td><input type="url" class="i_u" v-model="part_3_2_booking_url" id="part_3_2_booking_url"></td>
+                        </tr>
+                        <tr v-if="part_1_type == 'HOTEL'">
+                            <td><label for="part_3_2_ctrip_url">携程</label></td>
+                            <td><input type="url" class="i_u" v-model="part_3_2_booking_url" id="part_3_2_booking_url"></td>
+                        </tr>
+                        <tr v-if="part_1_type == 'HOTEL'">
+                            <td><label for="part_3_2_tuniu_url">途牛</label></td>
+                            <td><input type="url" class="i_u" v-model="part_3_2_tuniu_url" id="part_3_2_tuniu_url"></td>
+                        </tr> -->
+                        <tr v-if="part_1_type == 'SHOP' || part_1_type == 'TRAFFIC'">
+                            <td><label for="part_3_2_floor_url">楼层指南</label></td>
+                            <td>
+                                <div class="dynamic" v-for="(item, index) of part_3_2_floor_url">
+                                    <input type="url" class="i_u" v-model="part_3_2_floor_url[index]" :key="index">
+                                    <input type="button" class="i_b arr_ctl" value="+"
+                                        @click="url_add(part_3_2_floor_url, index)">
+                                    <input type="button" value="-"
+                                        :class="'i_b arr_ctl ' + (part_3_2_floor_url.length === 1 ? 'arr_ctl_disable' : '')"
+                                        @click="url_remove(part_3_2_floor_url, index)">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr v-if="part_1_type == 'SHOP' || part_1_type == 'TRAFFIC'">
+                            <td><label for="part_3_2_shop_url">店铺指南</label></td>
+                            <td>
+                                <div class="dynamic" v-for="(item, index) of part_3_2_shop_url">
+                                    <input type="url" class="i_u" v-model="part_3_2_shop_url[index]" :key="index">
+                                    <input type="button" class="i_b arr_ctl" value="+"
+                                        @click="url_add(part_3_2_shop_url, index)">
+                                    <input type="button" value="-"
+                                        :class="'i_b arr_ctl ' + (part_3_2_shop_url.length === 1 ? 'arr_ctl_disable' : '')"
+                                        @click="url_remove(part_3_2_shop_url, index)">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_2_traffic_url">交通、位置指南</label></td>
+                            <td>
+                                <div class="dynamic" v-for="(item, index) of part_3_2_traffic_url">
+                                    <input type="url" class="i_u" v-model="part_3_2_traffic_url[index]" :key="index">
+                                    <input type="button" class="i_b arr_ctl" value="+"
+                                        @click="url_add(part_3_2_traffic_url, index)">
+                                    <input type="button" value="-"
+                                        :class="'i_b arr_ctl ' + (part_3_2_traffic_url.length === 1 ? 'arr_ctl_disable' : '')"
+                                        @click="url_remove(part_3_2_traffic_url, index)">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr v-if="part_1_type !== 'HOTEL'">
+                            <td>
+                                <label for="part_3_2_time">{{ part_3_2_time_TITLE_CN }}</label></td>
+                            <td>
+                                <textarea class="ta" v-model="part_3_2_time" id="part_3_2_time" cols="70"
+                                    rows="5"></textarea>
+                            </td>
+                        </tr>
+                        <tr v-if="part_1_type == 'PLAY'">
+                            <td><label for="part_3_2_cost">门票价格</label></td>
+                            <td>
+                                <textarea class="ta" v-model="part_3_2_cost" id="part_3_2_cost" cols="70"
+                                    rows="5"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="">相关网站</label></td>
+                            <td>
+                                <div class="dynamic" v-for="(item, index) of part_3_other_url">
+                                    <input type="url" class="i_u" v-model="part_3_other_url[index]" :key="index">
+                                    <input type="button" class="i_b arr_ctl" value="+"
+                                        @click="url_add(part_3_other_url, index)">
+                                    <input type="button" value="-"
+                                        :class="'i_b arr_ctl ' + (part_3_other_url.length === 1 ? 'arr_ctl_disable' : '')"
+                                        @click="url_remove(part_3_other_url, index)">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_remarks">备注</label></td>
+                            <td>
+                                <textarea class="ta" v-model="part_3_remarks" id="part_3_remarks" cols="70"
+                                    rows="5"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_markdown">Markdown</label></td>
+                            <td>
+                                <textarea class="ta" v-model="part_3_markdown" id="part_3_markdown" cols="70"
+                                    rows="5"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_2_address_en">英文地址</label></td>
+                            <td><input type="text" class="i_t" v-model="part_3_2_address_en" id="part_3_2_address_en">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_2_address_cn">中文地址</label></td>
+                            <td><input type="text" class="i_t" v-model="part_3_2_address_cn" id="part_3_2_address_cn">
+                            </td>
+                        </tr>
+                        <!-- <tr>
+                            <td><label for="part_3_2_local"></label></td>
+                            <td>
+                                <textarea class="ta" v-model="part_3_2_local" id="part_3_2_local" cols="70" rows="5"></textarea>
+                            </td>
+                        </tr> -->
+                        <tr>
+                            <td><label for="part_3_2_pluscode">Plus code</label></td>
+                            <td><input type="text" class="i_t" v-model="part_3_2_pluscode" id="part_3_2_pluscode"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_2_gps">经纬度</label></td>
+                            <td class="dynamic">
+                                <input type="url" class="i_u" v-model="part_3_2_gps" id="part_3_2_gps">
+                                <!-- <a v-bind:href="'https://www.google.com/maps/place/'+part_3_2_gps" target="_blank"> -->
+                                <a v-bind:href="'https://www.google.com/maps/@'+part_3_2_gps+',18z'" target="_blank">
+                                    <input type="button" class="i_b" value="View in Google Maps">
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_2_google_url">谷歌地图分享url</label></td>
+                            <td class="dynamic">
+                                <input type="url" class="i_u" class="i_t" v-model="part_3_2_google_url"
+                                    id="part_3_2_google_url">
+                                <a v-bind:href="part_3_2_google_url" target="_blank">
+                                    <input type="button" class="i_b" value="View in Google Maps">
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="part_3_2_google_html">谷歌地图分享代码块</label></td>
+                            <td><input type="text" class="i_t" v-model="part_3_2_google_html" id="part_3_2_google_html">
+                            </td>
+                        </tr>
+                        <!-- <tr>
+                            <td><label for="part_3_other_url">相关攻略</label></td>
+                            <td>
+                                <textarea class="ta" v-model="part_3_other_url" id="part_3_other_url" cols="70" rows="5"></textarea>
+                            </td>
+                        </tr> -->
+                    </table>
+                </div>
+                <div class="part_3_2_right" v-if="part_3_2_google_html !== ''" v-html="part_3_2_google_html"></div>
+            </div>
+
+            <hr>
+        </div>
+        <div id="part_4">
+            <input type="button" class="i_b" value="清空" @click="reset">
+            <input type="date" class="i_d" v-model="part_4_last_save_time" readonly>
+            <input type="button" class="i_b" value="保存" @click="checkAndSave">
+        </div>
+    </div>
+    <script src="./insert.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+    <!-- <script src="https://cdn.staticfile.org/vue-router/2.7.0/vue-router.min.js"></script> -->
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <title>vue动态添加删除input并绑定到同一个data数据上</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <table>
+            <tr>
+                <td><label for="url">URL:</label></td>
+                <td>
+                    <div v-for="(item,i) of urls" :key="i">
+                        <input type="text" v-model="urls[i]" >
+                        <input type="button" value="+" @click="add(urls)">
+                        <input type="button" value="—" @click="remove(i)">
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script>
+
+        let vm = new Vue({
+            el: "#app",
+            data: function () {
+                return {
+                    urls: [""]
+                }
+            },
+            // // bind computed methods
+            computed: {
+            },
+            methods: {
+                add: function (k) {
+                    this.urls.push("");
+                    alert(k.length);
+                },
+                remove: function (e) {
+                    // e => key
+                    this.urls.splice(e, 1);
+                }
+            },
+            watch: {
+            }
+        });
+    </script>
+</body>
+
+</html>
