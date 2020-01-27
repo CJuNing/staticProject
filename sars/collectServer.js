@@ -91,7 +91,7 @@ let getNew = () => {
 
             if (data != lastStr) {
                 lastStr = data;
-                fs.writeFileSync(path.resolve(__dirname, `./${new Date().toLocaleString().replace(/\:|\ /g, "-")}.json`), lastStr);
+                fs.writeFileSync(path.resolve(__dirname, `./data/${new Date().toLocaleString().replace(/\:|\ /g, "-")}.json`), lastStr);
             }
         }
     });
